@@ -10,7 +10,7 @@ provider:
     - Effect: Allow
       Action:
         - s3:PutObject
-      Resource: "arn:${file(config.json):S3_PARTITION}:s3:::${file(config.json):BUCKET}/*"
+      Resource: "arn:${file(config.json):S3_PARTITION}:s3:::${file(config.json):DOMAIN_NAME}/*"
 
 functions:
   store:
@@ -26,19 +26,60 @@ resources:
     ServerlesslyRedirectS3Bucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: ${file(config.json):BUCKET}
+        BucketName: ${file(config.json):DOMAIN_NAME}
         AccessControl: PublicRead
+        CorsConfiguration:
+          CorsRules:
+          - AllowedMethods:
+            - GET
+            - POST
+            - PUT
+            - HEAD
+            AllowedOrigins:
+            - "*"
+            AllowedHeaders:
+            - "*"
         WebsiteConfiguration:
           IndexDocument: index.html
     ServerlesslyRedirectS3BucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
-        Bucket: ${file(config.json):BUCKET}
+        Bucket: ${file(config.json):DOMAIN_NAME}
         PolicyDocument:
           Statement:
           - Action:
             - s3:GetObject
             Effect: Allow
             Resource:
-            - arn:${file(config.json):S3_PARTITION}:s3:::${file(config.json):BUCKET}/*
+            - arn:${file(config.json):S3_PARTITION}:s3:::${file(config.json):DOMAIN_NAME}/*
             Principal: "*"
+    CDN:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          Aliases: ${file(config.json):DOMAIN_ALIASES}
+          PriceClass: PriceClass_100
+          ViewerCertificate:
+            AcmCertificateArn: ${file(config.json):CERTIFICATE_ARN}
+            SslSupportMethod: sni-only
+          Enabled: true
+          HttpVersion: http2
+          DefaultRootObject: index.html
+          Origins:
+            - DomainName: ${file(config.json):DOMAIN_NAME}.s3.amazonaws.com
+              Id: S3Origin
+              CustomOriginConfig:
+                HTTPPort: 80
+                HTTPSPort: 443
+                OriginProtocolPolicy: match-viewer
+          DefaultCacheBehavior:
+            ViewerProtocolPolicy: redirect-to-https
+            TargetOriginId: S3Origin
+            AllowedMethods:
+              - GET
+              - HEAD
+            Compress: false
+            DefaultTTL: 30
+            MinTTL: 10
+            ForwardedValues:
+              QueryString: true
