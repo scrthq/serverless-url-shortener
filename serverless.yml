@@ -66,20 +66,20 @@ resources:
           HttpVersion: http2
           DefaultRootObject: index.html
           Origins:
-            - DomainName: ${file(config.json):DOMAIN_NAME}.s3.amazonaws.com
+            - DomainName: ${file(config.json):DOMAIN_NAME}.s3-website-${file(config.json):REGION}.amazonaws.com
               Id: S3Origin
               CustomOriginConfig:
                 HTTPPort: 80
                 HTTPSPort: 443
                 OriginProtocolPolicy: match-viewer
           DefaultCacheBehavior:
-            ViewerProtocolPolicy: redirect-to-https
+            ViewerProtocolPolicy: allow-all
             TargetOriginId: S3Origin
             AllowedMethods:
               - GET
               - HEAD
             Compress: false
-            DefaultTTL: 30
-            MinTTL: 10
+            DefaultTTL: 0
+            MinTTL: 0
             ForwardedValues:
               QueryString: true
