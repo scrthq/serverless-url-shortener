@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name=viewport content="width=device-width,initial-scale=1">
-  <title>Serverless url shortener</title>
+  <title>INSERT_PAGE_TITLE</title>
   <link href="paper.min.css" rel="stylesheet">
 </head>
 <style>
@@ -18,7 +18,7 @@
 <body>
   <div class="row flex-center">
     <div class="col-8 col">
-      <h2>serverless url shortener</h2>
+      <h2>INSERT_PAGE_TITLE</h2>
       <form action="INSERT_API_URL">
         <div class="form-group">
           <label for="url">Enter URL to shorten</label>
@@ -28,7 +28,7 @@
         <input class="paper-btn" type="submit" value="Shorten link">
       </form>
       <p class="padding-top">
-        <a href="https://github.com/danielireson/serverless-url-shortener">View this project on Github</a>
+        <a href="INSERT_REPO_URL">View this project on Github</a>
       </p>
     </div>
   </div>
@@ -42,7 +42,7 @@
 
     function shortenLink (apiUrl, longUrl) {
       $.ajax(apiUrl, {
-        type : 'POST', 
+        type : 'POST',
         data: JSON.stringify({url: longUrl})})
         .done(function (responseJSON) {
           var shortUrl = window.location.protocol + '//' + window.location.host + '/' + responseJSON.path

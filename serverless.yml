@@ -69,17 +69,13 @@ resources:
             - DomainName: ${file(config.json):DOMAIN_NAME}.s3-website-${file(config.json):REGION}.amazonaws.com
               Id: S3Origin
               CustomOriginConfig:
-                HTTPPort: 80
-                HTTPSPort: 443
-                OriginProtocolPolicy: match-viewer
+                OriginProtocolPolicy: http-only
           DefaultCacheBehavior:
-            ViewerProtocolPolicy: allow-all
+            ViewerProtocolPolicy: redirect-to-https
             TargetOriginId: S3Origin
             AllowedMethods:
               - GET
               - HEAD
             Compress: false
-            DefaultTTL: 0
-            MinTTL: 0
             ForwardedValues:
               QueryString: true

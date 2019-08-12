@@ -1,8 +1,12 @@
 {
-  "BUCKET": "",
+  "BUCKET": "example.com",
+  "CERTIFICATE_ARN": "",
+  "DOMAIN_ALIASES": [],
   "S3_PARTITION": "aws",
-  "REGION": "eu-west-1",
-  "STAGE": "dev",
-  "API_ENDPOINT_TYPE": "EDGE",
-  "API_URL": ""
+  "REGION": "us-west-2",
+  "STAGE": "prod",
+  "API_ENDPOINT_TYPE": "REGIONAL",
+  "API_URL": "",
+  "REPO_URL": "https://github.com/scrthq/serverless-url-shortener",
+  "PAGE_TITLE": "Serverless URL Shortener"
 }
